@@ -1,0 +1,8 @@
+.plainquestion-bg-kulli{
+    height: 100vh;
+    
+    background-color: rgb(255, 255, 255);
+    color: rgb(255, 0, 0);
+    display: flex;
+    gap: 3rem;
+}
