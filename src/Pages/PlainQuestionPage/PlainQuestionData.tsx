@@ -11,6 +11,7 @@ import { AxiosError } from "axios";
 import { FadeLoader } from "react-spinners";
 import LoadingOverlayWrapper from "react-loading-overlay-ts";
 import { ToastContainer, Toast } from "react-bootstrap";
+import { yearsOptions } from "../../constants";
 
 const override: CSSProperties = {
   margin: "10 auto",
@@ -33,6 +34,8 @@ export default function PlainQuestionData() {
   const [option_d, setOption_d] = useState("");
   const [description, setDescription] = useState("");
   const [answerText, setAnswerText] = useState("option_a");
+  const [questionNumber, setQuestionNumber] = useState<number>();
+
   const [show, setShow] = useState(false);
   const answerOptions: SelectOption[] = [
     { label: "A", value: "option_a" },
@@ -73,6 +76,10 @@ export default function PlainQuestionData() {
   const handleSubExamCategoryChange = (e: any) => {
     setSelectedSubExamCategory(e.target.value);
   };
+  const handleYearsChange = (e: any) => {
+    setYear(e.target.value);
+  };
+
   const setQuestionTextValue = (val: string) => {
     setQuestionText(val);
   };
@@ -108,6 +115,7 @@ export default function PlainQuestionData() {
       description: description,
       course: selectedCourse,
       year: year,
+      questionNumber,
       image: "some question image",
     };
     console.log(question);
@@ -163,11 +171,13 @@ export default function PlainQuestionData() {
             />
           </div>
           <div className="editor-container">
-              <h6>Question Number</h6>
-              <input onChange={(e) => setYear(e.target.value)} />
-            </div>
+            <h6>Question Number</h6>
+            <input
+              type="number"
+              onChange={(e) => setQuestionNumber(parseInt(e.target.value))}
+            />
+          </div>
           <div className="kulli">
-       
             <div className="editor-container">
               <p>Paste your question here</p>
               <Editor setValue={setQuestionTextValue} editorId="editor1" />
@@ -197,12 +207,14 @@ export default function PlainQuestionData() {
               />
             </div>
 
-            <div className="editor-container">
-              <p>fill year here</p>
-              <input onChange={(e) => setYear(e.target.value)} />
+            <div className="exam-category">
+              <b>select Year</b>
+              <SelectDropdown
+                title=""
+                items={yearsOptions}
+                handleSelect={handleYearsChange}
+              />
             </div>
-
-           
 
             <div className="editor-container">
               <p>Paste your option Description here</p>

@@ -6,3 +6,7 @@
   display: flex;
   gap: 3rem;
 }
+.editor-container {
+  margin-bottom: 1rem;
+  padding-top: 1rem;
+}

@@ -1,6 +1,6 @@
 import "./groupedquestionpage.css";
 import { useState, useEffect, useRef, CSSProperties } from "react";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { SelectOption } from "../../DataService/service.types";
 import { PlainQuestion as GroupedQuestion } from "../../models/question.model";
 import SelectDropdown from "../../components/SelectDropdown";
@@ -29,6 +29,7 @@ export default function GroupedQuestionPage() {
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedDirection, setSelectedDirection] = useState("");
   const [questionText, setQuestionText] = useState("");
+  const [questionNumber, setQuestionNumber] = useState<number>();
   const [option_a, setOption_a] = useState("");
   const [option_b, setOption_b] = useState("");
   const [option_c, setOption_c] = useState("");
@@ -134,6 +135,7 @@ export default function GroupedQuestionPage() {
       courseId: selectedCourse,
       year: parseInt(selectedYear),
       direction: selectedDirection,
+      questionNumber,
       image: "some question image",
     };
 
@@ -203,6 +205,13 @@ export default function GroupedQuestionPage() {
               title="Directions"
               items={directions}
               handleSelect={handleDirectionChange}
+            />
+          </div>
+          <div className="editor-container">
+            <h6>Question Number</h6>
+            <input
+              type="number"
+              onChange={(e) => setQuestionNumber(parseInt(e.target.value))}
             />
           </div>
           <div className="kulli">

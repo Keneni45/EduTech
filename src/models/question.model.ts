@@ -8,7 +8,8 @@ export type PlainQuestion = {
   description: string;
   year: string | number;
   course?: string;
-  image: string;
+  image?: string;
+  questionNumber?: number;
   courseId?: string;
   direction?: string;
 };

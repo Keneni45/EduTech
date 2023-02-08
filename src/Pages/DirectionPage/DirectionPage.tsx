@@ -4,6 +4,7 @@ import SelectDropdown, { SelectOption } from "../../components/SelectDropdown";
 import Editor from "../../quill/Editor";
 import { Direction } from "../../models/direction.model";
 import { submitDirectionToServer } from "../../DataService/submit-questions.service";
+import { yearsOptions } from "../../constants";
 
 export default function DirectionPage() {
   const [courses, setCourses] = useState<SelectOption[]>([]);
@@ -47,6 +48,9 @@ export default function DirectionPage() {
     setPassage(val);
   };
 
+  const handleYearsChange = (e: any) => {
+    setYear(e.target.value);
+  };
   return (
     <div className="direction-question-bg">
       <div className="direction-question">
@@ -58,11 +62,12 @@ export default function DirectionPage() {
           />
         </div>
 
-        <div className="editor-container mt-3">
-          <p>fill year here</p>
-          <input
-            type="number"
-            onChange={(e) => setYear(parseInt(e.target.value))}
+        <div className="exam-category">
+          <b>select Year</b>
+          <SelectDropdown
+            title=""
+            items={yearsOptions}
+            handleSelect={handleYearsChange}
           />
         </div>
 
