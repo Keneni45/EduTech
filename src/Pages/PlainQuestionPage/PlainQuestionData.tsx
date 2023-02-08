@@ -20,6 +20,7 @@ const override: CSSProperties = {
 export default function PlainQuestionData() {
   const [errorMessage, setErrorMessage] = useState("");
   let [loading, setLoading] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
   const [examCatagories, setExamCatagories] = useState<SelectOption[]>([]);
   const [selectedExamCategory, setSelectedExamCategory] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -127,6 +128,7 @@ export default function PlainQuestionData() {
       const messages = result.response?.data?.message as Array<string>;
       for (const msg of messages) msgTxt += msg + " "; //concatenate array of error messages
       setErrorMessage(msgTxt);
+      setShowErrorToast(true);
     } else {
       setShow(true);
     }
@@ -235,7 +237,20 @@ export default function PlainQuestionData() {
               <Toast.Body>Question Submit Success</Toast.Body>
             </Toast>
           </ToastContainer>
-
+          <ToastContainer className="p-3" position="bottom-end">
+            <Toast
+              onClose={() => setShowErrorToast(false)}
+              show={showErrorToast}
+              delay={5000}
+              bg="danger"
+              autohide
+            >
+              <Toast.Header>
+                <strong className="me-auto">Server response</strong>
+              </Toast.Header>
+              <Toast.Body>Something is wrong check above message</Toast.Body>
+            </Toast>
+          </ToastContainer>
           <div className="submit-butt mb-3 mt-3">
             <button
               className="btn btn-primary btn-lg"

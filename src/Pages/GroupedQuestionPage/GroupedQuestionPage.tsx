@@ -37,6 +37,7 @@ export default function GroupedQuestionPage() {
   const [description, setDescription] = useState("");
   const [answerText, setAnswerText] = useState("option_a");
   const [show, setShow] = useState(false);
+  const [showErrorToast, setShowErrorToast] = useState(false);
   const isInitialMount = useRef(true);
   const answerOptions: SelectOption[] = [
     { label: "A", value: "option_a" },
@@ -150,6 +151,7 @@ export default function GroupedQuestionPage() {
       }
       setErrorMessage(msgTxt);
       //Todo handle error
+      setShowErrorToast(true);
     } else {
       //todo Handle success
       setShow(true);
@@ -183,6 +185,20 @@ export default function GroupedQuestionPage() {
               <strong className="me-auto">Server response</strong>
             </Toast.Header>
             <Toast.Body>Question Submit Success</Toast.Body>
+          </Toast>
+        </ToastContainer>
+        <ToastContainer className="p-3" position="bottom-end">
+          <Toast
+            onClose={() => setShowErrorToast(false)}
+            show={showErrorToast}
+            delay={5000}
+            bg="danger"
+            autohide
+          >
+            <Toast.Header>
+              <strong className="me-auto">Server response</strong>
+            </Toast.Header>
+            <Toast.Body>Something is wrong check above message</Toast.Body>
           </Toast>
         </ToastContainer>
         <div className="grouped-question">
@@ -250,7 +266,12 @@ export default function GroupedQuestionPage() {
             </div>
           </div>
           <div className="submit-butt">
-            <button onClick={submitQuestionToBackend}>submit</button>
+            <button
+              onClick={submitQuestionToBackend}
+              className="btn btn-primary btn-lg"
+            >
+              submit
+            </button>
           </div>
           {questionText}
         </div>
