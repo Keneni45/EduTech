@@ -1,163 +1,233 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import './plainquestiondata.css';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { ExamCategory } from '../../models/exam-catagory.model';
-import { fetchExamCategories } from '../../DataService/fetchExamCatagories.service';
-import SelectDropdown, {SelectOption} from '../../components/SelectDropdown';
-import { fetchExamSubCategories } from '../../DataService/fetchSubExamCategory';
-import Editor from '../../quill/Editor';
-import { PlainQuestion } from '../../models/question.model';
-import { Dropdown } from '../../components/DropDown';
+import { CSSProperties, useEffect, useState } from "react";
+import "./plainquestiondata.css";
+import "react-quill/dist/quill.snow.css";
+import { fetchExamCategories } from "../../DataService/fetchExamCatagories.service";
+import SelectDropdown, { SelectOption } from "../../components/SelectDropdown";
+import { fetchExamSubCategories } from "../../DataService/fetchSubExamCategory";
+import Editor from "../../quill/Editor";
+import { PlainQuestion } from "../../models/question.model";
+import { submitPlainQuestionToServer } from "../../DataService/submit-questions.service";
+import { AxiosError } from "axios";
+import { FadeLoader } from "react-spinners";
+import LoadingOverlayWrapper from "react-loading-overlay-ts";
+import { ToastContainer, Toast } from "react-bootstrap";
 
-
+const override: CSSProperties = {
+  margin: "10 auto",
+  borderColor: "red",
+};
 export default function PlainQuestionData() {
-    const [examCatagories, setExamCatagories]=useState<SelectOption[]>([]);
-    const [selectedExamCategory,setSelectedExamCategory] = useState('')
-    const [selectedCourse,setSelectedCourse] = useState('')
-    const [selectedSubExamCategory,setSelectedSubExamCategory] = useState('')
-    const [year,setYear] = useState('')
-    const [courses, setCourses]= useState<SelectOption[]>([])
-    const [subExamCatagory, setSubExamCatagory]= useState<SelectOption[]>([]);
-    const [questionText,setQuestionText] = useState('')
-    const [option_a, setOption_a] = useState('')
-    const [option_b, setOption_b] = useState('')
-    const [option_c, setOption_c] = useState('')
-    const [option_d, setOption_d] = useState('')
-    const [description, setDescription] = useState('')
-    const [answerText, setAnswerText] = useState('')
-    
-    async function fetchInitialFromServer() {
-        let data = await fetchExamCategories();
-        let examCatsOption = []
-        for (const examCat of data) {
-            examCatsOption.push({label:examCat.name,value:examCat._id});
-        }
-        setExamCatagories(examCatsOption);
-        setSelectedExamCategory(data[0]._id);
+  const [errorMessage, setErrorMessage] = useState("");
+  let [loading, setLoading] = useState(false);
+  const [examCatagories, setExamCatagories] = useState<SelectOption[]>([]);
+  const [selectedExamCategory, setSelectedExamCategory] = useState("");
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedSubExamCategory, setSelectedSubExamCategory] = useState("");
+  const [year, setYear] = useState("");
+  const [courses, setCourses] = useState<SelectOption[]>([]);
+  const [subExamCategory, setSubExamCategory] = useState<SelectOption[]>([]);
+  const [questionText, setQuestionText] = useState("");
+  const [option_a, setOption_a] = useState("");
+  const [option_b, setOption_b] = useState("");
+  const [option_c, setOption_c] = useState("");
+  const [option_d, setOption_d] = useState("");
+  const [description, setDescription] = useState("");
+  const [answerText, setAnswerText] = useState("option_a");
+  const [show, setShow] = useState(false);
+  const answerOptions: SelectOption[] = [
+    { label: "A", value: "option_a" },
+    { label: "B", value: "option_b" },
+    { label: "C", value: "option_c" },
+    { label: "D", value: "option_d" },
+  ];
+  async function fetchInitialFromServer() {
+    let data = await fetchExamCategories();
+    let examCatsOption = [];
+    for (const examCat of data) {
+      examCatsOption.push({ label: examCat.name, value: examCat._id });
+    }
+    setExamCatagories(examCatsOption);
+    setSelectedExamCategory(data[0]._id);
 
-      
-        let coursesOption = [];  
-        for (const course of data[0].courses) {
-            coursesOption.push({label:course.name,value:course._id})
-        }
-         setCourses(coursesOption);
-         setSelectedCourse(coursesOption[0].value);
+    let coursesOption = [];
+    for (const course of data[0].courses) {
+      coursesOption.push({ label: course.name, value: course._id });
+    }
+    setCourses(coursesOption);
+    setSelectedCourse(coursesOption[0].value);
 
-         const subExamCats = await fetchExamSubCategories(data[0]._id);
-         setSubExamCatagory(subExamCats);
-         setSelectedSubExamCategory(subExamCats[0].value);
-        
-        
-    }
+    const subExamCats = await fetchExamSubCategories(data[0]._id);
+    setSubExamCategory(subExamCats);
+    setSelectedSubExamCategory(subExamCats[0].value);
+  }
 
-    useEffect(()=>{
-        fetchInitialFromServer();
-    }, [])
-        const hanldeExamCategoryChange = (e:any)=>{
-     //TODO:
-     }
-        const hanldeCourseChange = (e:any)=>{
-         setSelectedCourse(e.target.value);
+  useEffect(() => {
+    fetchInitialFromServer();
+  }, []);
+  const handleExamCategoryChange = (e: any) => {
+    //TODO:
+  };
+  const handleCourseChange = (e: any) => {
+    setSelectedCourse(e.target.value);
+  };
+  const handleSubExamCategoryChange = (e: any) => {
+    setSelectedSubExamCategory(e.target.value);
+  };
+  const setQuestionTextValue = (val: string) => {
+    setQuestionText(val);
+  };
+  const setOption_a_Text = (val: string) => {
+    setOption_a(val);
+  };
+  const setOption_b_Text = (val: string) => {
+    setOption_b(val);
+  };
+  const setOption_c_Text = (val: string) => {
+    setOption_c(val);
+  };
+  const setOption_d_Text = (val: string) => {
+    setOption_d(val);
+  };
+  const setOption_answer_Text = (e: any) => {
+    setAnswerText(e.target.value);
+  };
+  const setDescription_Text = (val: string) => {
+    setDescription(val);
+  };
+  const submitGroupedQuestionToBackend = async (e: any) => {
+    e.preventDefault();
+    setLoading((prev) => true);
+    setErrorMessage("");
+    let question: PlainQuestion = {
+      questionText,
+      option_a: option_a,
+      option_b: option_b,
+      option_c: option_c,
+      option_d: option_d,
+      answer: answerText,
+      description: description,
+      course: selectedCourse,
+      year: year,
+      image: "some question image",
+    };
+    console.log(question);
+
+    let result = await submitPlainQuestionToServer(question);
+    setLoading((prev) => false);
+    if (result instanceof AxiosError) {
+      let msgTxt = "";
+      const messages = result.response?.data?.message as Array<string>;
+      for (const msg of messages) msgTxt += msg + " "; //concatenate array of error messages
+      setErrorMessage(msgTxt);
+    } else {
+      setShow(true);
     }
-        const hanldeSubExamCategoryChange = (e:any)=>{
-         setSelectedSubExamCategory(e.target.value);
-    }
-    const setQuestionTextValue = (val:string)=>{
-      setQuestionText(val);
-    }
-    const setOption_a_Text = (val:string)=>{
-      setOption_a(val);
-    }
-    const setOption_b_Text = (val:string)=>{
-       setOption_b(val);
-     }
-     const setOption_c_Text = (val:string)=>{
-       setOption_c(val);
-     }
-     const setOption_d_Text = (val:string)=>{
-       setOption_d(val);
-     }
-     const setOption_answer_Text = (val:string)=>{
-       setAnswerText(val);
-     }
-     const setDescription_Text = (val:string)=>{
-       setDescription(val);
-     }
-    const submitQuestionToBackend = (e:any)=>{
-      let question:PlainQuestion = {
-        questionText, 
-        option_a:option_a,
-        option_b:option_b,
-        option_c:option_c,
-        option_d:option_d,
-        answer:answerText,
-        description:description,
-        course: selectedCourse,
-        year:year,
-        image:'some question image'
-      }
-      console.log(question);
-      //create question api submit
-    }
+  };
+
   return (
-    <div className="plainquestion-bg-kulli">
-    <div className="plain-question"> 
-      <div className="exam-catagory">
-      <SelectDropdown title='' items={examCatagories} handleSelect={hanldeExamCategoryChange}/>
-      </div>
-      <div className="course-selection">
-      <SelectDropdown title='' items={courses} handleSelect={hanldeCourseChange}/>
-      </div>
-      <div className="subCatagory">
-      <SelectDropdown title='' items={subExamCatagory} handleSelect={hanldeSubExamCategoryChange}/>
-      </div>
-      <div className="kulli">
-      <div className="editor-container">
-        <p>Paste your question here</p>
-      <Editor setValue={setQuestionTextValue}/>
-      </div>
-      <div className="editor-container">
-        <p>Paste your option A here</p>
-      <Editor setValue={setOption_a_Text}/>
-      </div>
-      <div className="editor-container">
-        <p>Paste your option B here</p>
-      <Editor setValue={setOption_b_Text}/>
-      </div>
-      <div className="editor-container">
-        <p>Paste your option C here</p>
-      <Editor setValue={setOption_c_Text}/>
-      </div>
-      <div className="editor-container">
-        <p>Paste your option D here</p>
-      <Editor setValue={setOption_d_Text}/>
-      </div>
-      <div className="editor-container">
-        <p>Paste your  Answer here</p>
-        <input onChange={(e)=>setAnswerText(e.target.value)}/>
-      </div>
-      
-      <div className="editor-container">
-        <p>fill year here</p>
-        <input onChange={(e)=>setYear(e.target.value)}/>
-      </div> 
+    <LoadingOverlayWrapper
+      active={true}
+      spinner={
+        <FadeLoader
+          loading={true}
+          cssOverride={override}
+          aria-label="Loading Spinner"
+          data-testid="loader"
+        />
+      }
+    >
+      <div className="plain-question-bg-kulli">
+        {errorMessage.length > 0 && (
+          <p style={{ color: "red" }}>{errorMessage}</p>
+        )}
+        <div className="plain-question">
+          <div className="exam-category">
+            <SelectDropdown
+              title="Exam Category"
+              items={examCatagories}
+              handleSelect={handleExamCategoryChange}
+            />
+          </div>
+          <div className="course-selection">
+            <SelectDropdown
+              title="Courses"
+              items={courses}
+              handleSelect={handleCourseChange}
+            />
+          </div>
+          <div className="subCategory">
+            <SelectDropdown
+              title="Sub Category"
+              items={subExamCategory}
+              handleSelect={handleSubExamCategoryChange}
+            />
+          </div>
 
-      <div className="editor-container">
-        <p>Paste your option Description here</p>
-      <Editor setValue={setDescription_Text}/>
+          <div className="kulli">
+            <div className="editor-container">
+              <p>Paste your question here</p>
+              <Editor setValue={setQuestionTextValue} editorId="editor1" />
+            </div>
+            <div className="editor-container">
+              <p>Paste your option A here</p>
+              <Editor setValue={setOption_a_Text} editorId="editor2" />
+            </div>
+            <div className="editor-container">
+              <p>Paste your option B here</p>
+              <Editor setValue={setOption_b_Text} editorId="editor3" />
+            </div>
+            <div className="editor-container">
+              <p>Paste your option C here</p>
+              <Editor setValue={setOption_c_Text} editorId="editor4" />
+            </div>
+            <div className="editor-container">
+              <p>Paste your option D here</p>
+              <Editor setValue={setOption_d_Text} editorId="editor5" />
+            </div>
+            <div className="editor-container">
+              <p>choose Answer here</p>
+              <SelectDropdown
+                title=""
+                items={answerOptions}
+                handleSelect={setOption_answer_Text}
+              />
+            </div>
+
+            <div className="editor-container">
+              <p>fill year here</p>
+              <input onChange={(e) => setYear(e.target.value)} />
+            </div>
+
+            <div className="editor-container">
+              <p>Paste your option Description here</p>
+              <Editor setValue={setDescription_Text} editorId="editor6" />
+            </div>
+          </div>
+          <ToastContainer className="p-3" position="bottom-end">
+            <Toast
+              onClose={() => setShow(false)}
+              show={show}
+              delay={3000}
+              bg="success"
+              autohide
+            >
+              <Toast.Header>
+                <strong className="me-auto">Server response</strong>
+              </Toast.Header>
+              <Toast.Body>Question Submit Success</Toast.Body>
+            </Toast>
+          </ToastContainer>
+
+          <div className="submit-butt mb-3 mt-3">
+            <button
+              className="btn btn-primary btn-lg"
+              onClick={submitGroupedQuestionToBackend}
+            >
+              submit
+            </button>
+          </div>
+        </div>
       </div>
-      
-      </div>
-      <div className='submit-butt'>
-        <button onClick={submitQuestionToBackend}>submit</button>
-      </div>
-      {questionText}
-  </div>
-  </div>
-  
-  )
+    </LoadingOverlayWrapper>
+  );
 }
-
-

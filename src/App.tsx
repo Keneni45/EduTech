@@ -1,15 +1,39 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import "./App.css";
+import PlainQuestionData from "./Pages/PlainQuestionPage/PlainQuestionData";
 
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import GroupedQuestionPage from "./Pages/GroupedQuestionPage/GroupedQuestionPage";
+import DirectionPage from "./Pages/DirectionPage/DirectionPage";
+import LayoutComponent from "./components/LayoutComponent";
 function App() {
-  const [count, setCount] = useState(0)
+  const router = createBrowserRouter([
+    {
+      path: "",
+      element: <LayoutComponent />,
+      children: [
+        {
+          path: "/",
+          element: <PlainQuestionData />,
+        },
+
+        {
+          path: "/grouped-question",
+          element: <GroupedQuestionPage />,
+        },
+
+        {
+          path: "/direction",
+          element: <DirectionPage />,
+        },
+      ],
+    },
+  ]);
 
   return (
     <div className="App">
-    
+      <RouterProvider router={router} />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
