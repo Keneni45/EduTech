@@ -126,10 +126,10 @@ export default function PlainQuestionData() {
 
   return (
     <LoadingOverlayWrapper
-      active={true}
+      active={loading}
       spinner={
         <FadeLoader
-          loading={true}
+          loading={loading}
           cssOverride={override}
           aria-label="Loading Spinner"
           data-testid="loader"
@@ -162,8 +162,12 @@ export default function PlainQuestionData() {
               handleSelect={handleSubExamCategoryChange}
             />
           </div>
-
+          <div className="editor-container">
+              <h6>Question Number</h6>
+              <input onChange={(e) => setYear(e.target.value)} />
+            </div>
           <div className="kulli">
+       
             <div className="editor-container">
               <p>Paste your question here</p>
               <Editor setValue={setQuestionTextValue} editorId="editor1" />
@@ -197,6 +201,8 @@ export default function PlainQuestionData() {
               <p>fill year here</p>
               <input onChange={(e) => setYear(e.target.value)} />
             </div>
+
+           
 
             <div className="editor-container">
               <p>Paste your option Description here</p>
