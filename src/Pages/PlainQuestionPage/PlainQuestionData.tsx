@@ -208,13 +208,18 @@ export default function PlainQuestionData() {
             <h6>Question Number</h6>
             <input
               type="number"
+              value={questionNumber}
               onChange={(e) => setQuestionNumber(parseInt(e.target.value))}
             />
           </div>
           <div className="kulli">
             <div className="editor-container">
               <p>Paste your question here</p>
-              <Editor setValue={setQuestionTextValue} editorId="editor1" />
+              <Editor
+                setValue={setQuestionTextValue}
+                editorId="editor1"
+                value={questionText}
+              />
             </div>
             <div className="editor-container">
               <p>
@@ -233,11 +238,15 @@ export default function PlainQuestionData() {
             </div>
             <div className="editor-container">
               <p>
-                Paste your option{" "}
-                <span style={{ color: "red", fontWeight: "bolder" }}>A</span>
+                Paste your option{"  "}
+                <span style={{ color: "red", fontWeight: "bolder" }}> A </span>
                 here
               </p>
-              <Editor setValue={setOption_a_Text} editorId="editor2" />
+              <Editor
+                setValue={setOption_a_Text}
+                editorId="editor2"
+                value={option_a}
+              />
             </div>
             <div className="editor-container">
               <p>
@@ -245,7 +254,11 @@ export default function PlainQuestionData() {
                 <span style={{ color: "red", fontWeight: "bolder" }}>B</span>{" "}
                 here
               </p>
-              <Editor setValue={setOption_b_Text} editorId="editor3" />
+              <Editor
+                setValue={setOption_b_Text}
+                editorId="editor3"
+                value={option_b}
+              />
             </div>
             <div className="editor-container">
               <p>
@@ -253,7 +266,11 @@ export default function PlainQuestionData() {
                 <span style={{ color: "red", fontWeight: "bolder" }}>C</span>{" "}
                 here
               </p>
-              <Editor setValue={setOption_c_Text} editorId="editor4" />
+              <Editor
+                setValue={setOption_c_Text}
+                editorId="editor4"
+                value={option_c}
+              />
             </div>
             <div className="editor-container">
               <p>
@@ -261,7 +278,11 @@ export default function PlainQuestionData() {
                 <span style={{ color: "red", fontWeight: "bolder" }}>D</span>{" "}
                 here
               </p>
-              <Editor setValue={setOption_d_Text} editorId="editor5" />
+              <Editor
+                setValue={setOption_d_Text}
+                editorId="editor5"
+                value={option_d}
+              />
             </div>
             <div className="editor-container">
               <p>choose Answer here</p>
@@ -283,7 +304,11 @@ export default function PlainQuestionData() {
 
             <div className="editor-container">
               <p>Paste your option Description here</p>
-              <Editor setValue={setDescription_Text} editorId="editor6" />
+              <Editor
+                setValue={setDescription_Text}
+                editorId="editor6"
+                value={description}
+              />
             </div>
             <div className="editor-container">
               <p>
