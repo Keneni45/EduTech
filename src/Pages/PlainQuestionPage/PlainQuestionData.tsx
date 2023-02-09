@@ -41,7 +41,7 @@ export default function PlainQuestionData() {
   const [descriptionImage, setDescriptionImage] = useState("");
   const [tempQuestionImagePath, setTempQuestionImagePath] = useState("");
   const [tempDescriptionImagePath, setTempDescriptionImagePath] = useState("");
-  const [questionNumber, setQuestionNumber] = useState<number>();
+  const [questionNumber, setQuestionNumber] = useState<number | any>();
 
   const [show, setShow] = useState(false);
   const answerOptions: SelectOption[] = [
@@ -151,9 +151,21 @@ export default function PlainQuestionData() {
       setShowErrorToast(true);
     } else {
       setShow(true);
+      clearForm();
     }
   };
-
+  const clearForm = () => {
+    setQuestionText("");
+    setOption_a("");
+    setOption_b("");
+    setOption_c("");
+    setOption_d("");
+    const quesNum = parseInt(questionNumber || 0);
+    setQuestionNumber(quesNum + 1);
+    setDescription("");
+    setQuestionImage("");
+    setDescriptionImage("");
+  };
   return (
     <LoadingOverlayWrapper
       active={loading}
@@ -220,19 +232,35 @@ export default function PlainQuestionData() {
               />
             </div>
             <div className="editor-container">
-              <p>Paste your option A here</p>
+              <p>
+                Paste your option{" "}
+                <span style={{ color: "red", fontWeight: "bolder" }}>A</span>
+                here
+              </p>
               <Editor setValue={setOption_a_Text} editorId="editor2" />
             </div>
             <div className="editor-container">
-              <p>Paste your option B here</p>
+              <p>
+                Paste your option{" "}
+                <span style={{ color: "red", fontWeight: "bolder" }}>B</span>{" "}
+                here
+              </p>
               <Editor setValue={setOption_b_Text} editorId="editor3" />
             </div>
             <div className="editor-container">
-              <p>Paste your option C here</p>
+              <p>
+                Paste your option{" "}
+                <span style={{ color: "red", fontWeight: "bolder" }}>C</span>{" "}
+                here
+              </p>
               <Editor setValue={setOption_c_Text} editorId="editor4" />
             </div>
             <div className="editor-container">
-              <p>Paste your option D here</p>
+              <p>
+                Paste your option{" "}
+                <span style={{ color: "red", fontWeight: "bolder" }}>D</span>{" "}
+                here
+              </p>
               <Editor setValue={setOption_d_Text} editorId="editor5" />
             </div>
             <div className="editor-container">
