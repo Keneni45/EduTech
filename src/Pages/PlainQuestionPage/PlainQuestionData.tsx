@@ -165,6 +165,8 @@ export default function PlainQuestionData() {
     setDescription("");
     setQuestionImage("");
     setDescriptionImage("");
+    setTempQuestionImagePath("");
+    setTempDescriptionImagePath("");
   };
   return (
     <LoadingOverlayWrapper

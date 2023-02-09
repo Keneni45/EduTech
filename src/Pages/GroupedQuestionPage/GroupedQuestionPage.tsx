@@ -189,6 +189,8 @@ export default function GroupedQuestionPage() {
     setDescription("");
     setQuestionImage("");
     setDescriptionImage("");
+    setTempQuestionImagePath("");
+    setTempDescriptionImagePath("");
   };
   return (
     <LoadingOverlayWrapper
