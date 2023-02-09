@@ -28,7 +28,7 @@ export default function GroupedQuestionPage() {
   const [directions, setDirections] = useState<SelectOption[]>([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [years, setYears] = useState<SelectOption[]>([]);
-  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedYear, setSelectedYear] = useState("2015");
   const [selectedDirection, setSelectedDirection] = useState("");
   const [questionText, setQuestionText] = useState("");
   const [questionNumber, setQuestionNumber] = useState<number>();

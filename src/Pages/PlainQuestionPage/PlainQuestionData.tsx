@@ -26,7 +26,7 @@ export default function PlainQuestionData() {
   const [selectedExamCategory, setSelectedExamCategory] = useState("");
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedSubExamCategory, setSelectedSubExamCategory] = useState("");
-  const [year, setYear] = useState("");
+  const [year, setYear] = useState("2015");
   const [courses, setCourses] = useState<SelectOption[]>([]);
   const [subExamCategory, setSubExamCategory] = useState<SelectOption[]>([]);
   const [questionText, setQuestionText] = useState("");
