@@ -1,5 +1,7 @@
 import "./groupedquestionpage.css";
 import { useState, useEffect, useRef, CSSProperties } from "react";
+import placeholderImage from "../../assets/place_holder.jpg";
+
 import { AxiosError } from "axios";
 import { SelectOption } from "../../DataService/service.types";
 import { PlainQuestion as GroupedQuestion } from "../../models/question.model";
@@ -39,6 +41,11 @@ export default function GroupedQuestionPage() {
   const [show, setShow] = useState(false);
   const [showErrorToast, setShowErrorToast] = useState(false);
   const isInitialMount = useRef(true);
+
+  const [questionImage, setQuestionImage] = useState("");
+  const [descriptionImage, setDescriptionImage] = useState("");
+  const [tempQuestionImagePath, setTempQuestionImagePath] = useState("");
+  const [tempDescriptionImagePath, setTempDescriptionImagePath] = useState("");
   const answerOptions: SelectOption[] = [
     { label: "A", value: "option_a" },
     { label: "B", value: "option_b" },
@@ -101,6 +108,16 @@ export default function GroupedQuestionPage() {
   const handleYearChange = (e: any) => {
     setSelectedYear(e.target.value);
   };
+  function handleQuestionImageChange(e: any) {
+    console.log(e.target.files);
+    setTempQuestionImagePath(URL.createObjectURL(e.target.files[0]));
+    setQuestionImage(e.target.files[0]);
+  }
+  function handleDescriptionImageChange(e: any) {
+    console.log(e.target.files);
+    setTempDescriptionImagePath(URL.createObjectURL(e.target.files[0]));
+    setDescriptionImage(e.target.files[0]);
+  }
   const setQuestionTextValue = (val: string) => {
     setQuestionText(val);
   };
@@ -137,10 +154,13 @@ export default function GroupedQuestionPage() {
       year: parseInt(selectedYear),
       direction: selectedDirection,
       questionNumber,
-      image: "some question image",
     };
 
-    const result = await submitGroupedQuestionToServer(question);
+    const result = await submitGroupedQuestionToServer(
+      question,
+      questionImage,
+      descriptionImage
+    );
     setLoading((prev) => false);
 
     if (result instanceof AxiosError) {
@@ -236,6 +256,21 @@ export default function GroupedQuestionPage() {
               <Editor setValue={setQuestionTextValue} editorId="editor1" />
             </div>
             <div className="editor-container">
+              <p>
+                <strong>select Image if the Question has Image</strong>
+              </p>
+              <img
+                src={tempQuestionImagePath || placeholderImage}
+                id="photo"
+                className="img"
+              />
+              <input
+                type="file"
+                id="file"
+                onChange={handleQuestionImageChange}
+              />
+            </div>
+            <div className="editor-container">
               <p>Paste your option A here</p>
               <Editor setValue={setOption_a_Text} editorId="editor2" />
             </div>
@@ -263,6 +298,22 @@ export default function GroupedQuestionPage() {
             <div className="editor-container">
               <p>Paste your option Description here</p>
               <Editor setValue={setDescription_Text} editorId="editor6" />
+            </div>
+            <div className="editor-container">
+              <p>
+                {" "}
+                <strong>select Image if the description has Image</strong>
+              </p>
+              <img
+                src={tempDescriptionImagePath || placeholderImage}
+                id="photo"
+                className="img"
+              />
+              <input
+                type="file"
+                id="file"
+                onChange={handleDescriptionImageChange}
+              />
             </div>
           </div>
           <div className="submit-butt">

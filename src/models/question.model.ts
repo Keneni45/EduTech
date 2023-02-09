@@ -12,4 +12,6 @@ export type PlainQuestion = {
   questionNumber?: number;
   courseId?: string;
   direction?: string;
+  questionImage?: string;
+  descriptionImage?: string;
 };

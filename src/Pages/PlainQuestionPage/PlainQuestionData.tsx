@@ -1,4 +1,5 @@
 import { CSSProperties, useEffect, useState } from "react";
+import placeholderImage from "../../assets/place_holder.jpg";
 import "./plainquestiondata.css";
 import "react-quill/dist/quill.snow.css";
 import { fetchExamCategories } from "../../DataService/fetchExamCatagories.service";
@@ -35,6 +36,11 @@ export default function PlainQuestionData() {
   const [option_d, setOption_d] = useState("");
   const [description, setDescription] = useState("");
   const [answerText, setAnswerText] = useState("option_a");
+
+  const [questionImage, setQuestionImage] = useState("");
+  const [descriptionImage, setDescriptionImage] = useState("");
+  const [tempQuestionImagePath, setTempQuestionImagePath] = useState("");
+  const [tempDescriptionImagePath, setTempDescriptionImagePath] = useState("");
   const [questionNumber, setQuestionNumber] = useState<number>();
 
   const [show, setShow] = useState(false);
@@ -80,7 +86,16 @@ export default function PlainQuestionData() {
   const handleYearsChange = (e: any) => {
     setYear(e.target.value);
   };
-
+  function handleQuestionImageChange(e: any) {
+    console.log(e.target.files);
+    setTempQuestionImagePath(URL.createObjectURL(e.target.files[0]));
+    setQuestionImage(e.target.files[0]);
+  }
+  function handleDescriptionImageChange(e: any) {
+    console.log(e.target.files);
+    setTempDescriptionImagePath(URL.createObjectURL(e.target.files[0]));
+    setDescriptionImage(e.target.files[0]);
+  }
   const setQuestionTextValue = (val: string) => {
     setQuestionText(val);
   };
@@ -116,12 +131,17 @@ export default function PlainQuestionData() {
       description: description,
       course: selectedCourse,
       year: year,
-      questionNumber,
-      image: "some question image",
-    };
-    console.log(question);
 
-    let result = await submitPlainQuestionToServer(question);
+      questionNumber,
+    };
+    console.log("question image 00");
+    console.log(questionImage);
+
+    let result = await submitPlainQuestionToServer(
+      question,
+      questionImage,
+      descriptionImage
+    );
     setLoading((prev) => false);
     if (result instanceof AxiosError) {
       let msgTxt = "";
@@ -185,6 +205,21 @@ export default function PlainQuestionData() {
               <Editor setValue={setQuestionTextValue} editorId="editor1" />
             </div>
             <div className="editor-container">
+              <p>
+                <strong>select Image if the Question has Image</strong>
+              </p>
+              <img
+                src={tempQuestionImagePath || placeholderImage}
+                id="photo"
+                className="img"
+              />
+              <input
+                type="file"
+                id="file"
+                onChange={handleQuestionImageChange}
+              />
+            </div>
+            <div className="editor-container">
               <p>Paste your option A here</p>
               <Editor setValue={setOption_a_Text} editorId="editor2" />
             </div>
@@ -221,6 +256,22 @@ export default function PlainQuestionData() {
             <div className="editor-container">
               <p>Paste your option Description here</p>
               <Editor setValue={setDescription_Text} editorId="editor6" />
+            </div>
+            <div className="editor-container">
+              <p>
+                {" "}
+                <strong>select Image if the description has Image</strong>
+              </p>
+              <img
+                src={tempDescriptionImagePath || placeholderImage}
+                id="photo"
+                className="img"
+              />
+              <input
+                type="file"
+                id="file"
+                onChange={handleDescriptionImageChange}
+              />
             </div>
           </div>
           <ToastContainer className="p-3" position="bottom-end">
